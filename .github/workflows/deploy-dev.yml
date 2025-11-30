@@ -1,0 +1,33 @@
+name: Deploy Dev
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  build-and-deploy-dev:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install deps
+        run: npm install
+
+      - name: Run migrations (Dev)
+        env:
+          DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
+        run: npm run migrate
+
+      - name: Deploy do Vercel (dev)
+        env: 
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_DEV }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }} 
+        run: | 
+          npx vercel pull --yes --environment=preview --token "$VERCEL_TOKEN"
+          npx vercel deploy --yes --token "$VERCEL_TOKEN"

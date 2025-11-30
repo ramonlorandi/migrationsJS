@@ -1,0 +1,35 @@
+name: Deploy Preprod
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "0 3 * * *"
+
+jobs:
+  build-and-deploy-preprod:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install deps
+        run: npm install
+
+      - name: Run migrations (Preprod)
+        env:
+          DATABASE_URL: ${{ secrets.PREPROD_DATABASE_URL }}
+        run: npm run migrate
+
+      - name: Deploy do Vercel (preprod)
+        env: 
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_PREPROD }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }} 
+        run: | 
+          npx vercel pull --yes --environment=preview --token "$VERCEL_TOKEN"
+          npx vercel deploy --yes --token "$VERCEL_TOKEN"
