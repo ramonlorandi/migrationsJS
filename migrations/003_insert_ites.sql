@@ -1,0 +1,7 @@
+CREATE TABLE aula2043 (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL UNIQUE,
+  region VARCHAR(100),
+  iso_code CHAR(3),
+  notes TEXT
+);
