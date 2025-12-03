@@ -14,6 +14,7 @@ INSERT INTO countries (name, region, iso_code, notes) VALUES
 ('Estados Unidos','América do Norte','USA','Sobremesas variadas'),
 ('México','América do Norte','MEX','Doces com sabores intensos'),
 ('Portugal','Europa','PRT','Doces conventuais')
+('Estados Unidos','América do Norte','USA','Doces industrializados')
 ON CONFLICT (name) DO NOTHING;
 
 CREATE TABLE IF NOT EXISTS desserts (
@@ -33,7 +34,8 @@ SELECT country_id, name, price, description FROM (
     (3,'Tiramisu',18.00,'Sobremesa italiana com café'),
     (4,'Mochi',6.50,'Bolinhas de arroz glutinoso'),
     (5,'Brownie',7.00,'Brownie de chocolate'),
-    (6,'Churros',9.00,'Churros recheados')
+    (6,'Churros',9.00,'Churros recheados'),
+    (8,'Pirulito',4.00,'Pirulito gigante')
 ) AS v(country_id, name, price, description)
 WHERE NOT EXISTS (
   SELECT 1 FROM desserts d WHERE d.name = v.name AND d.country_id = v.country_id
