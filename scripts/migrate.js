@@ -9,14 +9,11 @@ async function run() {
     process.exit(1);
   }
 
-  const sqlPath = path.join(__dirname, '..', 'migrations', '001_create_tables.sql');
-  const sql = fs.readFileSync(sqlPath, 'utf8');
+  const migrationsDir = path.join(__dirname, '..', 'migrations');
 
-  // separa comandos por ;
-  const statements = sql
-    .split(/;\s*$/m)
-    .map(s => s.trim())
-    .filter(s => s.length > 0);
+  const migrationFiles = fs.readdirSync(migrationsDir)
+    .filter(file => file.endsWith('.sql'))
+    .sort();
 
   const client = new Client({
     connectionString: databaseUrl,
@@ -25,15 +22,29 @@ async function run() {
 
   try {
     await client.connect();
-    console.log('Conectado ao banco. Executando migration...');
-    await client.query('BEGIN');
+    console.log('Conectado ao banco.');
 
-    for (const stmt of statements) {
-      await client.query(stmt);
+    for (const file of migrationFiles) {
+      const filePath = path.join(migrationsDir, file);
+      const sql = fs.readFileSync(filePath, 'utf8');
+
+      console.log(`Executando migration: ${file}`);
+      await client.query('BEGIN');
+
+      const statements = sql
+        .split(/;\s*$/m)
+        .map(s => s.trim())
+        .filter(s => s.length > 0);
+
+      for (const stmt of statements) {
+        await client.query(stmt);
+      }
+
+      await client.query('COMMIT');
+      console.log(`Migration ${file} executada com sucesso.`);
     }
 
-    await client.query('COMMIT');
-    console.log('Migration executada com sucesso.');
+    console.log('Todas as migrations foram executadas com sucesso.');
   } catch (err) {
     console.error('Erro na migration:', err);
     try { await client.query('ROLLBACK'); } catch(e){}
