@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS countries (
 );
 
 INSERT INTO countries (name, region, iso_code, notes) VALUES
-('Brasil','América do Sul','BRA','País com várias sobremesas regionais'),
+('Brasil','América do Sul','BRA','País com várias sobremesas por região'),
 ('França','Europa','FRA','Alta tradição patisserie'),
 ('Itália','Europa','ITA','Conhecida por gelato e tiramisu'),
 ('Japão','Ásia','JPN','Doces tradicionais como wagashi'),
