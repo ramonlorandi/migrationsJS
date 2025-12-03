@@ -11,7 +11,6 @@ async function run() {
 
   const migrationsDir = path.join(__dirname, '..', 'migrations');
 
-  // lista arquivos .sql ordenados: 001_..., 002_...
   const migrationFiles = fs.readdirSync(migrationsDir)
     .filter(file => file.endsWith('.sql'))
     .sort();
