@@ -14,7 +14,7 @@ INSERT INTO countries (name, region, iso_code, notes) VALUES
 ('Estados Unidos','América do Norte','USA','Sobremesas variadas'),
 ('México','América do Norte','MEX','Doces com sabores intensos'),
 ('Portugal','Europa','PRT','Doces conventuais'),
-('Estados Unidos','América do Norte','USA','Doces industrializados')
+('Canadá','América do Norte','CAN','Doces industrializados')
 ON CONFLICT (name) DO NOTHING;
 
 CREATE TABLE IF NOT EXISTS desserts (
